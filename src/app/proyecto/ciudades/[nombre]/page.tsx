@@ -1,89 +1,58 @@
-import { notFound } from 'next/navigation';
-import { Card } from '@/components/ui/card';
-import Image from 'next/image';
-import Link from 'next/link';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 
-export default function CiudadPage({ params }: { params: { nombre: string } }) {
-  const { nombre } = params;
+export default async function DynamicPage({ params }: { params: Promise<{ nombre: string }> }) {
+  const { nombre } = await params; 
 
-  const ciudadesValidas = [
-    'bogota',
-    'medellin',
-    'cali',
-    'bucaramanga',
-    'pereira',
-    'cartagena'
+  // Datos adicionales ficticios para mostrar en las cards
+  const atractivos = [
+    "Parque central",
+    "Museo histórico",
+    "Plaza principal",
+    "Zona gastronómica"
   ];
 
-  if (!ciudadesValidas.includes(nombre.toLowerCase())) {
-    notFound();
-  }
-
   return (
-    <main className="min-h-screen bg-neutral-900 text-gray-100">
+    <div className="min-h-screen bg-gradient-to-b from-[#f5f0e6] to-[#e6ded3] p-6 flex flex-col items-center">
       
-      {/* === Banner urbano === */}
-      <div className="relative w-full h-72">
-        <Image
-          src={`/images/${nombre}.jpg`}
-          alt={nombre}
-          fill
-          className="object-cover opacity-90"
-        />
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-          <h1 className="text-5xl font-extrabold uppercase tracking-wide text-yellow-400 drop-shadow-lg">
-            {nombre}
-          </h1>
-        </div>
-      </div>
+      {/* Card principal */}
+      <Card className="w-full max-w-md shadow-2xl border border-[#d4c1a0] rounded-3xl mb-8">
+        <CardHeader>
+          <CardTitle className="capitalize text-2xl text-[#4b362a] font-extrabold">Ciudad: {nombre}</CardTitle>
+        </CardHeader>
 
-      {/* === Contenedor principal === */}
-      <div className="container mx-auto px-6 py-10">
-
-        {/* === Tarjeta principal === */}
-        <Card className="bg-neutral-800 p-6 border border-yellow-500/30 shadow-xl rounded-2xl">
-          <h2 className="text-3xl font-bold mb-2 text-yellow-400">
-            Información general
-          </h2>
-
-          <p className="text-lg text-gray-300 leading-relaxed">
-            Bienvenido a la ciudad de <span className="font-semibold capitalize">{nombre}</span>.  
-            Aquí encontrarás información turística, curiosidades y datos importantes.
+        <CardContent className="text-[#5a3f2f]">
+          <p className="mb-4 text-lg">
+            Esta es una página generada dinámicamente. No contiene datos reales, pero sirve para mostrar la estructura de la información.
           </p>
-        </Card>
 
-        {/* === Datos clave === */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
-          <div className="bg-neutral-800 p-5 rounded-xl border border-neutral-700">
-            <h3 className="text-xl font-bold text-yellow-400">Población</h3>
-            <p className="text-gray-300 mt-2">Cifra variable según la ciudad.</p>
+          {/* Botón regresar */}
+          <div className="flex justify-center mt-4">
+            <Link
+              href="/proyecto/ciudades"
+              className="
+                bg-[#c89f74] hover:bg-[#b07b3e] text-white font-semibold
+                py-2 px-6 rounded-xl shadow-lg
+                hover:shadow-2xl transition-all duration-300
+                text-center
+              "
+            >
+              ← Regresar
+            </Link>
           </div>
+        </CardContent>
+      </Card>
 
-          <div className="bg-neutral-800 p-5 rounded-xl border border-neutral-700">
-            <h3 className="text-xl font-bold text-yellow-400">Región</h3>
-            <p className="text-gray-300 mt-2">Depende de cada ciudad.</p>
-          </div>
-
-          <div className="bg-neutral-800 p-5 rounded-xl border border-neutral-700">
-            <h3 className="text-xl font-bold text-yellow-400">Atractivos</h3>
-            <p className="text-gray-300 mt-2">
-              Lugares turísticos característicos.
-            </p>
-          </div>
-        </section>
-
-        {/* === Botón volver === */}
-        <div className="mt-10">
-          <Link
-            href="/proyecto/ciudades/"
-            className="inline-block bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-6 rounded-lg transition shadow-md"
-          >
-            ← Volver a la lista de ciudades
-          </Link>
-        </div>
-
+      {/* Cards de atractivos */}
+      <div className="w-full max-w-md grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {atractivos.map((item, index) => (
+          <Card key={index} className="bg-[#fdf7ef] border border-[#d4c1a0] rounded-2xl shadow-md hover:shadow-xl transition">
+            <CardContent className="text-[#5a3f2f] text-center font-semibold">
+              {item}
+            </CardContent>
+          </Card>
+        ))}
       </div>
-
-    </main>
+    </div>
   );
 }
